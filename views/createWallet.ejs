@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Wallet</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet" />
+  </head>
+
+  <body class="bg-gray-100">
+    <header class="bg-blue-500 text-white p-4">
+      <h1 class="text-2xl">Create Wallet</h1>
+    </header>
+    <main class="container mx-auto p-8">
+      <section class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Create a New Wallet</h2>
+        <button
+          id="createWalletButton"
+          class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+          Create Wallet
+        </button>
+        <div id="loading" class="hidden mt-4 text-blue-500">Loading...</div>
+        <textarea
+          id="responseTextArea"
+          class="hidden mt-4 w-full h-40 border-gray-300 focus:ring focus:ring-blue-200 p-2 rounded-md"></textarea>
+        <textarea
+          id="responseTextArea"
+          class="hidden mt-4 w-full h-40 border-gray-300 focus:ring focus:ring-blue-200 p-2 rounded-md"></textarea>
+      </section>
+    </main>
+    <footer class="text-center p-4 mt-8 bg-gray-300">
+      <p>&copy; <%= new Date().getFullYear() %> Utkarsh Joshi. All rights reserved.</p>
+    </footer>
+    <script>
+      const createWalletButton = document.getElementById("createWalletButton");
+      const loading = document.getElementById("loading");
+      const responseTextArea = document.getElementById("responseTextArea");
+
+      createWalletButton.addEventListener("click", async () => {
+        loading.classList.remove("hidden");
+        responseTextArea.classList.add("hidden");
+
+        try {
+          const response = await fetch("/api/create-wallet", {
+            method: "POST",
+          });
+
+          if (response.ok) {
+            const walletDetails = await response.json();
+            console.log(walletDetails);
+            responseTextArea.value = JSON.stringify(walletDetails, null, 2);
+            responseTextArea.classList.remove("hidden");
+          } else {
+            console.error("Error creating wallet");
+          }
+        } catch (error) {
+          console.error("An error occurred", error);
+        } finally {
+          loading.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>
